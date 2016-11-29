@@ -367,6 +367,163 @@
             </div>
         </div>
 
+        <!-- Teemun omat jutut -->
+        
+        <div class="chartPanel">
+            <div class="chartControls">
+                <button id="logareabtnstart" class="btn btn-success">Start logging</button>
+                <button id="logareabtnstop" class="btn btn-warning" disabled>Stop logging</button>
+                <button id="logareabtnclear" class="btn btn-default">Clear</button>
+                <button id="logareabtncopy" class="btn btn-primary">Copy all to clipboard</button>
+                <span id="logareastatus"></span>
+            </div>
+            <div id="chartWrapper" >
+                <textarea class="logtextarea" id="logtextarea"></textarea>
+            </div>
+        </div>
+        <style>
+            textarea.logtextarea {
+                width: 100%;
+                height: 150px;
+                font-size: 10px;
+            }
+            .logareastatus {
+                font-weight: bold;
+            }
+        </style>
+        <script type="text/javascript">
+            var logger = {
+                logging: false,
+                timer: 0,
+                startTime: 0,
+
+                previous: {
+                    bufferLenght: 0,
+                    bitrate: 0,
+                    index: 0,
+                },
+
+                start: function() {
+                    logger.timer = window.setInterval(logger.tick, 100);
+                    if (logger.startTime == 0) {
+                        logger.startTime = logger.getTimeMillis();
+                        logger.logHeader();
+                    }
+                    logger.tick();
+                },
+
+                stop: function() {
+                    window.clearInterval(logger.timer);
+                },
+
+                getValues: function() {
+                    var stats = document.querySelector("#videoStatsTab");
+                    var scope = angular.element(stats).scope();
+                    return {
+                        bufferLenght: scope.videoBufferLength,
+                        bitrate: scope.videoBitrate,
+                        index: scope.videoIndex,
+                    };
+                },
+
+                getTimeStamp: function() {
+                    var date = new Date();
+                    return date.getFullYear() + "-" + (date.getMonth() + 1) +"-"+ date.getDate() +" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+                },
+
+                getTimeMillis: function() {
+                    return (+ new Date());
+                },
+
+                tick: function() {
+                    var v = logger.getValues();
+                    for (var k in logger.previous) {
+                        if (v[k] && logger.previous[k] !== v[k]) {
+                            logger.logItems(v);
+                            logger.previous = v;
+                            return;
+                        }
+                    }
+                },
+
+                logItems: function(vals) {
+                    var ms = (logger.getTimeMillis() - logger.startTime)/1000;
+                    var s = ms + "\t";
+                    for (var k in vals) {
+                        s += vals[k] + "\t";
+                    }
+                    logger.log(s);
+                },
+
+                logHeader: function(vals) {
+                    var s = logger.getTimeStamp() + "\r\ntimeSeconds\t";
+                    for (var k in logger.previous) {
+                        s += k + "\t";
+                    }
+                    logger.log(s);
+                },
+
+                log: function(s) {
+                    var old = $("#logtextarea").val();
+                    $("#logtextarea").val(old + s + "\r\n");
+                },
+
+                clear: function() {
+                    logger.startTime = 0;
+                },
+            };
+
+            function onTextAreaClick(e) {
+                $(this).select();
+            }
+            
+            function startLog(e) {
+                logger.start();
+                $("#logareabtnstart").prop("disabled", true);
+                $("#logareabtnstop").prop("disabled", false);
+                $("#logareabtnclear").prop("disabled", true);
+                $("#logareabtncopy").prop("disabled", true);
+            }
+
+            function stopLog(e) {
+                logger.stop();
+                $("#logareabtnstart").prop("disabled", false);
+                $("#logareabtnstop").prop("disabled", true);
+                $("#logareabtnclear").prop("disabled", false);
+                $("#logareabtncopy").prop("disabled", false);
+            }
+
+            function clearLog(e) {
+                $("#logtextarea").val("");
+                logger.clear();
+            }
+
+            function copyAllToCB() {
+                $("#logtextarea").select();
+                var succeed;
+                try {
+                    succeed = document.execCommand("copy");
+                } catch(e) {
+                    succeed = false;
+                }
+                if (succeed) {
+                    $("#logareastatus").text("Copied!");
+                    window.setTimeout(function(){$("#logareastatus").empty();}, 3000);
+                } else {
+                    $("#logareastatus").text("Copy failed, please use Ctrl-C");
+                }
+            }
+
+            $(function(){
+                $("#logtextarea").on("focus", onTextAreaClick);
+                $("#logareabtncopy").on("click", copyAllToCB);
+                $("#logareabtnstart").on("click", startLog);
+                $("#logareabtnstop").on("click", stopLog);
+                $("#logareabtnclear").on("click", clearLog);
+                clearLog();
+            });
+        </script>
+
         <!-- CHARTING -->
 
         <div class="chartPanel">
