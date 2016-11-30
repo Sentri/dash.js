@@ -401,6 +401,7 @@
                     bufferLenght: 0,
                     bitrate: 0,
                     index: 0,
+                    videoTime: 0,
                 },
 
                 start: function() {
@@ -419,10 +420,16 @@
                 getValues: function() {
                     var stats = document.querySelector("#videoStatsTab");
                     var scope = angular.element(stats).scope();
+                    var time = 0;
+                    try {
+                        time = scope.player.time();
+                    } catch(e){
+                    }
                     return {
                         bufferLenght: scope.videoBufferLength,
                         bitrate: scope.videoBitrate,
                         index: scope.videoIndex,
+                        videoTime: time,
                     };
                 },
 
