@@ -405,7 +405,7 @@
                 },
 
                 start: function() {
-                    logger.timer = window.setInterval(logger.tick, 100);
+                    logger.timer = window.setInterval(logger.tick, 1000);
                     if (logger.startTime == 0) {
                         logger.startTime = logger.getTimeMillis();
                         logger.logHeader();
