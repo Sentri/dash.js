@@ -368,7 +368,7 @@
         </div>
 
         <!-- Teemun omat jutut -->
-        
+
         <div class="chartPanel">
             <div class="chartControls">
                 <button id="logareabtnstart" class="btn btn-success">Start logging</button>
@@ -402,15 +402,19 @@
                     bitrate: 0,
                     index: 0,
                     videoTime: 0,
+                    downloadTime: 0
                 },
 
                 start: function() {
+                    var stats = document.querySelector("#videoStatsTab");
+                    var scope = angular.element(stats).scope();
                     logger.timer = window.setInterval(logger.tick, 1000);
                     if (logger.startTime == 0) {
                         logger.startTime = logger.getTimeMillis();
                         logger.logHeader();
                     }
                     logger.tick();
+                    scope.doLoad();
                 },
 
                 stop: function() {
@@ -430,6 +434,7 @@
                         bitrate: scope.videoBitrate,
                         index: scope.videoIndex,
                         videoTime: time,
+                        downloadTime: scope.videoDownload.split('|')[1] || '-'
                     };
                 },
 
@@ -483,7 +488,7 @@
             function onTextAreaClick(e) {
                 $(this).select();
             }
-            
+
             function startLog(e) {
                 logger.start();
                 $("#logareabtnstart").prop("disabled", true);
