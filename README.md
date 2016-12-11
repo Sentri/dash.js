@@ -1,3 +1,12 @@
+## What is this fork about?
+This fork contains small additions to [DASH IF Reference Player](samples/dash-if-reference-player/index.html) to log the following metrics:
++ current length of the video buffer
++ bit rate of the video currently being downloaded
++ video index (rendition) currently being downloaded
++ playback time (seek) of the player 
++ average download time for last 4 segments
+
+The logger was made for Aalto University course CS-E4140 - Applications and Services in Internet
 
 <img src="https://cloud.githubusercontent.com/assets/2762250/7824984/985c3e76-03bc-11e5-807b-1402bde4fe56.png" width="400">
 
@@ -22,9 +31,9 @@ Full [API Documentation ](http://cdn.dashjs.org/latest/jsdoc/index.html) is avai
 For help, join our [Slack channel](https://dashif-slack.azurewebsites.net), our [email list](https://groups.google.com/d/forum/dashjs) and read our [wiki](https://github.com/Dash-Industry-Forum/dash.js/wiki).
 
 ## Reference players
-The released [pre-built reference players](http://dashif.org/reference/players/javascript/index.html) are publicly accessible if you want direct access without writing any Javascript. 
+The released [pre-built reference players](http://dashif.org/reference/players/javascript/index.html) are publicly accessible if you want direct access without writing any Javascript.
 
-The [nightly build of the /dev branch reference player](http://mediapm.edgesuite.net/dash/public/nightly/samples/dash-if-reference-player/index.html), is pre-release but contains the latest fixes. It is a good place to start if you are debugging playback problems. 
+The [nightly build of the /dev branch reference player](http://mediapm.edgesuite.net/dash/public/nightly/samples/dash-if-reference-player/index.html), is pre-release but contains the latest fixes. It is a good place to start if you are debugging playback problems.
 
 A nightly build of the latest minified files are also available: [dash.all.min.js](http://mediapm.edgesuite.net/dash/public/nightly/dist/dash.all.min.js) and its debug version  [dash.all.debug.js](http://mediapm.edgesuite.net/dash/public/nightly/dist/dash.all.debug.js).
 
@@ -74,7 +83,7 @@ View the /samples folder for many other examples of embedding and using the play
     * grunt dist
     * grunt release
     * grunt test
-    
+
 
 ## Getting Started
 
@@ -138,7 +147,7 @@ bundlers can be found in the [`samples/modules`](https://github.com/Dash-Industr
 
 ### MediaPlayerFactory Setup
 
-An alternative way to build a Dash.js player in your web page is to use the MediaPlayerFactory.  The MediaPlayerFactory will automatically instantiate and initialize the MediaPlayer module on appropriately tagged video elements. 
+An alternative way to build a Dash.js player in your web page is to use the MediaPlayerFactory.  The MediaPlayerFactory will automatically instantiate and initialize the MediaPlayer module on appropriately tagged video elements.
 
 Create a video element somewhere in your html and provide the path to your `mpd` file as src. Also ensure that your video element has the `data-dashjs-player` attribute on it.
 ```html
